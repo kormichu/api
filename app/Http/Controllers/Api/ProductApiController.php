@@ -34,7 +34,7 @@ class ProductApiController extends Controller
     public function fetch(Request $request)
     {
         if(!$request->has('id')) {
-            return response('Not found', 404);
+            return response('No id parameter', 400);
         }
 
         try {
