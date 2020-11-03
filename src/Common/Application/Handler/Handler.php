@@ -12,4 +12,9 @@ interface Handler
      * @param Command $command
      */
     public function handle(Command $command): void;
+
+    /**
+     * @return array
+     */
+    public function getSupportedCommands(): array;
 }

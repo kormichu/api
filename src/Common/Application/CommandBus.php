@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Common\Application;
 
 use Common\Application\Command\Command;
+use Common\Application\Exception\CommandBusException;
 use Common\Application\Handler\Handler;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
 class CommandBus
 {
@@ -23,10 +23,18 @@ class CommandBus
 
     /**
      * @param LoggerInterface $logger
+     * @param array $handlers
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, array $handlers = array())
     {
         $this->logger = $logger;
+
+        /** @var Handler $handler */
+        foreach($handlers as $handler) {
+            foreach($handler->getSupportedCommands() as $commandName) {
+                $this->registerHandler($commandName, $handler);
+            }
+        }
     }
 
     /**
@@ -50,7 +58,7 @@ class CommandBus
         $this->logger->debug('Trying to handle command', $context);
 
         if(!isset($this->handlers[$className])) {
-            throw new \Exception(); // TODO
+            throw CommandBusException::forUnsupportedCommand($command);
         }
 
         /** @var Handler $handler */

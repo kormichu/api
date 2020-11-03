@@ -58,7 +58,16 @@ class CreateProductHandler implements Handler
         );
         $this->productRepository->save($product);
 
-        $context['id'] = $product->getId()->__toString();
         $this->logger->info('The product has been created', $context);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSupportedCommands(): array
+    {
+        return [
+            CreateProduct::class
+        ];
     }
 }
