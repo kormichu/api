@@ -1,0 +1,67 @@
+version: "3"
+services:
+  api-php:
+    hostname: api-php
+    container_name: api-php-$PHP_VERSION
+    build: ./_images/api-php-$PHP_VERSION
+    restart: on-failure
+    working_dir: /docker/app
+    volumes:
+      - ../:/docker/app:rw
+      - ./_conf/api-php/usr/local/etc/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./_conf/api-php/usr/local/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+      - ~/.composer:/docker/.composer
+    links:
+      - api-mysql:api-mysql
+
+  api-nginx:
+    hostname: api-nginx
+    container_name: api-nginx
+    image: nginx:alpine
+    links:
+      - api-php:api-php
+    volumes:
+      - ../:/docker/app:rw
+      - ./_conf/api-nginx/etc/nginx:/etc/nginx:ro
+    depends_on:
+      - api-php
+      - api-mysql
+    ports:
+      - ${NGINX_PORT}:80
+
+  api-mysql:
+    hostname: api-mysql
+    container_name: api-mysql
+    image: mariadb:latest
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - api-vol-mysql:/var/lib/mysql
+
+  api-phpmyadmin:
+    hostname: api-phpmyadmin
+    container_name: api-phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    restart: on-failure
+    environment:
+      PMA_HOST: api-mysql
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASSWORD}
+    depends_on:
+      - api-mysql
+    links:
+      - api-mysql:api-mysql
+    ports:
+      - ${PMA_PORT}:80
+    volumes:
+      - api-vol-phpmyadmin-sessions:/sessions
+
+volumes:
+  api-vol-mysql:
+    driver: local
+  api-vol-phpmyadmin-sessions:
+    driver: local
