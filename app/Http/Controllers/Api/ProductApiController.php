@@ -58,13 +58,15 @@ class ProductApiController extends Controller
             return response($errors, 400);
         }
 
+        $data = $validator->validate();
+
         /** @var ProductId $productId */
         $productId = $this->idGenerator->generate(ProductId::class);
         $this->commandBus->handle(
             new \Api\Application\Command\CreateProduct(
                 $productId,
-                $request->get('name'),
-                $request->get('price')
+                $data['name'],
+                $data['price']
             )
         );
 
