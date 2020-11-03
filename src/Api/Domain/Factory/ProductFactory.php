@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Api\Domain\Model;
+namespace Api\Domain\Factory;
 
+use Api\Domain\Model\Product;
 use Brick\Math\BigDecimal;
 use Common\Application\Command\Factory;
 use Common\Domain\Model\Id\ProductId;

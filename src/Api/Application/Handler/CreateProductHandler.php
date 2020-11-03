@@ -5,28 +5,16 @@ declare(strict_types=1);
 namespace Api\Application\Handler;
 
 use Api\Application\Command\CreateProduct;
-use Api\Domain\Model\ProductFactory;
+use Api\Domain\Factory\ProductFactory;
 use Api\Domain\Model\ProductRepository;
 use Common\Application\Command\Command;
 use Common\Application\Handler\Handler;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
 class CreateProductHandler implements Handler
 {
-    /**
-     * @var ProductFactory
-     */
     private ProductFactory $productFactory;
-
-    /**
-     * @var ProductRepository
-     */
     private ProductRepository $productRepository;
-
-    /**
-     * @var LoggerInterface
-     */
     private LoggerInterface $logger;
 
     /**

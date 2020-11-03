@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Api\Infrastructure\Eloquent\Transformer;
 
-use Api\Domain\Model\ProductFactory;
+use Api\Domain\Factory\ProductFactory;
 use Api\Infrastructure\Eloquent\Model\Product as Entity;
 use Api\Domain\Model\Product as Domain;
 use Common\Domain\Model\Id\ProductId;

@@ -33,6 +33,10 @@ class ProductApiController extends Controller
 
     public function fetch(Request $request)
     {
+        if(!$request->has('id')) {
+            return response('Not found', 404);
+        }
+
         try {
             $product = $this->productRepository->get(new ProductId($request->get('id')));
         } catch(AggregateNotFoundException $exc) {
